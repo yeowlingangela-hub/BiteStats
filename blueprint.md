@@ -4,7 +4,7 @@
 
 BiteStats is a modern, single-page web application designed to provide quick nutritional information (calories and protein) for food items. The user can type a food query into a search bar, and the app will fetch and display the data. The interface is designed to be visually appealing and responsive, featuring a glassmorphism design aesthetic.
 
-## Implemented Features (v2.0)
+## Implemented Features (v3.1)
 
 ### Core Functionality
 - **Real-Time Data Search:** Integrates with the OpenFoodFacts API to fetch live nutritional data.
@@ -12,38 +12,28 @@ BiteStats is a modern, single-page web application designed to provide quick nut
 - **Portion Calculation:** Users can enter a portion size in grams to get accurate nutritional values for their serving.
 - **Debounced Input:** The search automatically triggers after the user stops typing, creating a seamless experience.
 
+### Accessibility & Theming
+- **Multi-Language Support:** Users can switch between English, Mandarin, French, and Malay.
+- **Day/Night Mode:** A toggle allows users to switch between a light and a dark theme, with the preference saved locally.
+- **High-Contrast Text:** Text colors are theme-aware, using dark brown for the light theme and white for the dark theme to ensure readability.
+
 ### Visual Design
 - **Glassmorphism UI:** Results are displayed on a translucent, blurred card.
-- **Rustic & Fancier Theme:** A high-quality, rustic food-themed background image is used.
-- **Custom Fonts & Colors:** Uses the 'Montserrat' font and a custom color palette for a unique, premium feel.
+- **Themed Backgrounds:** The app uses different background images for day and night modes.
 - **Verified Source Badge:** A "✔ Verified" badge indicates when data is from the OpenFoodFacts API.
 
 ---
 
-## **Current Plan: Accessibility & Theming (v3.0)**
+## **Current Plan: UI & Visual Refinement (v3.2)**
 
-This update focuses on improving accessibility and user customization by adding multi-language support and a day/night theme toggle.
+This update focuses on refining the user interface by increasing the visual weight of the most important data and enhancing the theme's aesthetic.
 
 **Plan & Steps:**
 
-1.  **Implement Language Switching:**
-    *   Add a dropdown menu to the UI allowing users to select from English (en), Mandarin (zh), French (fr), and Malay (ms).
-    *   Create a `translations` object in the JavaScript to store all UI string translations for each language.
-    *   Use `data-key` attributes on HTML elements to identify and map them to the translation object.
-    *   Write a `setLanguage` function to dynamically update all UI text based on the selected language.
-    *   Store the user's language preference in `localStorage` to persist the choice across sessions.
+1.  **Increase Nutrient Font Size:**
+    *   Locate the CSS rule for the calorie and protein value display (`.nutrition-item .value`).
+    *   Increase the `font-size` from `2.5rem` to `3.5rem` to make the numbers more prominent and easier to read at a glance.
 
-2.  **Implement Day/Night Mode Toggle:**
-    *   Add a toggle switch or button to the UI to allow users to switch between a light (day) and dark (night) theme.
-    *   Refactor the CSS to use CSS variables for all colors, fonts, and background images.
-    *   Define two themes: a default light theme and a `.dark-mode` class that overrides the CSS variables for the dark theme.
-    *   Write a `toggleTheme` function in JavaScript to add or remove the `.dark-mode` class from the `<body>`.
-    *   Store the user's theme preference in `localStorage` to persist the choice.
-
-3.  **Refactor HTML & CSS:**
-    *   Add the new UI elements for the language selector and theme toggle.
-    *   Restructure the CSS to be theme-ready by replacing static values with `var()` functions.
-
-4.  **Refactor JavaScript:**
-    *   Implement the logic for language and theme switching, including event listeners and `localStorage` handling.
-    *   Ensure the dynamic text (like search results) is correctly integrated with the new translation system.
+2.  **Update Light Theme Background:**
+    *   Find a new high-quality, darker rustic food-themed image from Pexels.
+    *   Update the `--bg-image-light` CSS variable with the URL of the new image to refresh the app's look and feel.

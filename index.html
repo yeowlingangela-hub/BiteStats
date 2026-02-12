@@ -10,10 +10,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-image-light: url('https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+            --bg-image-light: url('https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
             --bg-image-dark: url('https://images.pexels.com/photos/326281/pexels-photo-326281.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
             --bg-color: #333;
-            --text-color: #FFFFFF;
+            --text-color: #4B3832; /* Dark Brown */
+            --logo-text-color: #3a2a22; /* Even darker brown for logo contrast */
             --card-bg: rgba(255, 255, 255, 0.05);
             --card-border: rgba(255, 255, 255, 0.18);
             --input-bg: rgba(88, 41, 0, 0.5);
@@ -44,6 +45,8 @@
 
         body.dark-mode {
             background-image: var(--bg-image-dark);
+            --text-color: #FFFFFF;
+            --logo-text-color: #FFFFFF;
             --card-bg: rgba(0, 0, 0, 0.5);
             --input-bg: rgba(50, 50, 50, 0.7);
             --input-text: #E0E0E0;
@@ -60,7 +63,7 @@
 
         #languageSelector, #theme-toggle-button {
             background: rgba(0,0,0,0.5);
-            color: white;
+            color: white; /* Kept white for contrast on dark button */
             border: 1px solid white;
             padding: 8px 12px;
             border-radius: 5px;
@@ -74,6 +77,7 @@
         }
 
         .logo {
+            color: var(--logo-text-color);
             font-size: 3.5rem;
             font-weight: 700;
             text-shadow: 0 0 15px rgba(0,0,0,0.7);
@@ -114,6 +118,23 @@
             width: 25%;
         }
 
+        .search-input::placeholder, .portion-input::placeholder {
+            color: var(--input-text);
+            opacity: 0.7;
+        }
+
+        .pulse-animation {
+            display: none;
+            font-size: 1.2rem;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
         .results-card {
             background: var(--card-bg);
             backdrop-filter: blur(15px);
@@ -127,7 +148,13 @@
         }
         
         .results-content {
-            color: #FFF0E1; 
+            color: var(--text-color);
+        }
+
+        .nutrition-item .value {
+            font-size: 3.5rem; /* Increased from 2.5rem */
+            font-weight: 700;
+            margin-top: 0.5rem;
         }
 
         .calories {
@@ -180,7 +207,7 @@
         const translations = {
             en: { 
                 search_placeholder: "e.g., 'sourdough bread' or 'eggs'", 
-                portion_placeholder: "Portion (g)", 
+                portion_placeholder: "Portion", 
                 searching: "Searching...", 
                 verified_source: "✔ Verified Source", 
                 calories_label: "Estimated Calories", 
@@ -189,7 +216,7 @@
             },
             zh: { 
                 search_placeholder: "例如：'酸面包'或'鸡蛋'", 
-                portion_placeholder: "份量（克）", 
+                portion_placeholder: "份量", 
                 searching: "正在搜索...", 
                 verified_source: "✔ 验证来源", 
                 calories_label: "估计卡路里", 
@@ -198,7 +225,7 @@
             },
             fr: { 
                 search_placeholder: "Ex: 'pain au levain' ou 'œufs'", 
-                portion_placeholder: "Portion (g)", 
+                portion_placeholder: "Portion", 
                 searching: "Recherche...", 
                 verified_source: "✔ Source Vérifiée", 
                 calories_label: "Calories Estimées", 
@@ -207,7 +234,7 @@
             },
             ms: { 
                 search_placeholder: "Cth: 'roti masam' atau 'telur'", 
-                portion_placeholder: "Bahagian (g)", 
+                portion_placeholder: "Bahagian", 
                 searching: "Mencari...", 
                 verified_source: "✔ Sumber Disahkan", 
                 calories_label: "Anggaran Kalori", 
@@ -240,12 +267,10 @@
 
         langSelector.addEventListener('change', (e) => setLanguage(e.target.value));
 
-        // Set initial language
         const savedLang = localStorage.getItem('language') || 'en';
         langSelector.value = savedLang;
         setLanguage(savedLang);
 
-        // --- Theme Toggle ---
         const themeToggleButton = document.getElementById('theme-toggle-button');
         const body = document.body;
 
@@ -263,11 +288,9 @@
             applyTheme(newTheme);
         });
         
-        // Set initial theme
         const savedTheme = localStorage.getItem('theme') || 'light';
         applyTheme(savedTheme);
         
-        // --- Search Logic (from previous step, unchanged) ---
         const searchInput = document.getElementById('searchInput');
         const portionInput = document.getElementById('portionInput');
         const pulseAnimation = document.getElementById('pulseAnimation');
@@ -366,7 +389,7 @@
         };
         
         const showNotFound = (query) => {
-            foodQuery.textContent = `No results for "${query}"`;
+            foodQuery.textContent = `No results for \"${query}\"`;
             caloriesValue.textContent = '--';
             proteinValue.textContent = '--';
             verifiedBadge.style.display = 'none';
