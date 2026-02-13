@@ -10,11 +10,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:wght@400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-image-light: url('https://images.pexels.com/photos/3756523/pexels-photo-3756523.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+            --bg-image-light: url('https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
             --bg-image-dark: url('https://images.pexels.com/photos/1893555/pexels-photo-1893555.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
             --bg-color: #333;
             --text-color: #3D2B1F; /* Darker Brown for light mode */
-            --logo-text-color: #3D2B1F;
+            --logo-text-color: #4A2C2A;
             --card-bg: rgba(255, 255, 255, 0.1);
             --card-border: rgba(255, 255, 255, 0.2);
             --input-bg: rgba(255, 255, 255, 0.8);
@@ -109,7 +109,7 @@
             gap: 10px;
         }
 
-        .search-input, .portion-input {
+        .search-input, .portion-input, #voiceSearchBtn {
             padding: 1rem 1.5rem;
             border-radius: 50px;
             font-size: 1.1rem;
@@ -129,6 +129,15 @@
 
         .portion-input {
             width: 25%;
+        }
+
+        #voiceSearchBtn {
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
         }
 
         .search-input::placeholder, .portion-input::placeholder {
@@ -203,6 +212,7 @@
         </div>
         <div class="search-form">
             <input type="text" class="search-input" id="searchInput" data-key="search_placeholder">
+            <button id="voiceSearchBtn">🎤</button>
             <input type="number" class="portion-input" id="portionInput" data-key="portion_placeholder">
         </div>
 
@@ -322,6 +332,7 @@
         const caloriesValue = document.getElementById('caloriesValue');
         const proteinValue = document.getElementById('proteinValue');
         const verifiedBadge = document.getElementById('verifiedBadge');
+        const voiceSearchBtn = document.getElementById('voiceSearchBtn');
 
         const fallbackData = {
             "apple": { calories: 52, protein: 0.3 },
@@ -425,6 +436,41 @@
 
         searchInput.addEventListener('input', debouncedSearch);
         portionInput.addEventListener('input', debouncedSearch);
+
+        // Voice Search
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            voiceSearchBtn.addEventListener('click', () => {
+                recognition.start();
+                voiceSearchBtn.textContent = '🎙️';
+            });
+
+            recognition.onresult = (event) => {
+                const speechResult = event.results[0][0].transcript;
+                searchInput.value = speechResult;
+                debouncedSearch();
+            };
+
+            recognition.onspeechend = () => {
+                recognition.stop();
+                voiceSearchBtn.textContent = '🎤';
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                voiceSearchBtn.textContent = '🎤';
+            };
+        } else {
+            voiceSearchBtn.style.display = 'none';
+            console.log('Speech recognition not supported in this browser.');
+        }
+
     </script>
 
 </body>
